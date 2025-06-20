@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Online IDE Architecture</title>
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #1e1e1e 0%, #2a2a2a 100%);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #00d4ff 0%, #090979 50%, #020024 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 3em;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00d4ff, #ffffff, #00d4ff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textShine 4s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes textShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .header p {
+            margin: 15px 0 0 0;
+            opacity: 0.95;
+            font-size: 1.2em;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .architecture {
+            padding: 50px;
+            background: #1a1a1a;
+        }
+        
+        .layer {
+            margin-bottom: 50px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .layer:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+        }
+        
+        .layer-header {
+            padding: 20px 30px;
+            font-weight: 600;
+            font-size: 1.3em;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .layer-header i {
+            margin-right: 15px;
+            font-size: 1.5em;
+        }
+        
+        .frontend { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .api { 
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .services { 
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .execution { 
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .ai { 
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .data { 
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .layer-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .layer:hover .layer-header::before {
+            opacity: 1;
+        }
+        
+        .layer-content {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .component {
+            background: linear-gradient(145deg, #3a3a3a 0%, #2d2d2d 100%);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .component::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .component:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,212,255,0.2), 0 0 0 1px rgba(0,212,255,0.3);
+            border-color: rgba(0,212,255,0.3);
+        }
+        
+        .component:hover::before {
+            left: 100%;
+        }
+        
+        .component h4 {
+            margin: 0 0 20px 0;
+            color: #ffffff;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        
+        .component p {
+            margin: 0;
+            color: #b4b4b4;
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+        
+        .tech-stack {
+            background: linear-gradient(145deg, #404040 0%, #333333 100%);
+            padding: 18px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .tech-stack strong {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+        
+        .tech-stack span {
+            color: #cccccc;
+            font-size: 0.9em;
+        }
+        
+        .flow-diagram {
+            background: linear-gradient(145deg, #2a2a2a 0%, #1e1e1e 100%);
+            margin: 40px 0;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .flow-diagram h2 {
+            color: #ffffff;
+            margin-bottom: 40px;
+            font-size: 2em;
+            font-weight: 700;
+        }
+        
+        .flow-step {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 28px;
+            margin: 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .flow-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(102,126,234,0.4);
+        }
+        
+        .flow-step:after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00d4ff;
+            font-size: 1.8em;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }
+        
+        .flow-step:last-child:after {
+            display: none;
+        }
+        
+        .security-note {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .security-note h3 {
+            margin: 0 0 25px 0;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        
+        .security-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .security-list li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .security-list li:before {
+            content: '🔒';
+            position: absolute;
+            left: 0;
+            top: 12px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI-Powered Online IDE Architecture</h1>
+            <p>Multi-language code execution platform with intelligent AI assistance</p>
+        </div>
+        
+        <div class="architecture">
+            <!-- Frontend Layer -->
+            <div class="layer">
+                <div class="layer-header frontend">
+                    <span>🎨 Frontend Layer</span>
+                </div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component">
+                            <h4>Code Editor</h4>
+                            <p>Monaco Editor (VS Code engine) with syntax highlighting, auto-completion, and real-time AI suggestions</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>React, Monaco Editor, WebSocket</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>File Explorer</h4>
+                            <p>Tree-view file management with drag-drop, project templates, and Git integration</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>React Tree Component, Context API</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>Terminal Interface</h4>
+                            <p>Web-based terminal with command execution and real-time output streaming</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>Xterm.js, WebSocket, Node-pty</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>AI Assistant Panel</h4>
+                            <p>Chat interface for code help, debugging assistance, and code generation</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>React, Markdown Renderer, SSE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API Gateway -->
+            <div class="layer">
+                <div class="layer-header api">
+                    <span>🌐 API Gateway & Load Balancer</span>
+                </div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component">
+                            <h4>API Gateway</h4>
+                            <p>Routes requests, handles authentication, rate limiting, and request/response transformation</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>Nginx, Kong, or AWS API Gateway</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>WebSocket Manager</h4>
+                            <p>Manages real-time connections for code execution, terminal, and AI interactions</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>Socket.io, Redis for scaling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Backend Services -->
+            <div class="layer">
+                <div class="layer-header services">
+                    <span>⚙️ Backend Services</span>
+                </div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component">
+                            <h4>User Management Service</h4>
+                            <p>Authentication, user profiles, project management, and collaboration features</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>Node.js/Express, JWT, bcrypt</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>File Management Service</h4>
+                            <p>Handle file operations, version control, and project templates</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>Node.js, AWS S3, Git integration</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>Code Analysis Service</h4>
+                            <p>Static code analysis, linting, and formatting for supported languages</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>Language servers, ESLint, Prettier</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Code Execution Layer -->
+            <div class="layer">
+                <div class="layer-header execution">
+                    <span>🚀 Code Execution Environment</span>
+                </div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component">
+                            <h4>Container Orchestration</h4>
+                            <p>Docker containers for each supported language with resource limits and isolation</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>Docker, Kubernetes, or Docker Swarm</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>Language Runtimes</h4>
+                            <p>Pre-configured containers for Python, JavaScript, Java, C++, Go, Rust, PHP, Ruby, etc.</p>
+                            <div class="tech-stack">
+                                <strong>Languages:</strong> <span>Python 3.x, Node.js, OpenJDK, GCC, Go, Rust</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>Execution Manager</h4>
+                            <p>Queues code execution requests, manages timeouts, and streams output</p>
+                            <div class="tech-stack">
+                                <strong>Tech:</strong> <span>Redis Queue, Bull.js, Worker processes</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>Security Sandbox</h4>
+                            <p>Isolated environment with network restrictions, file system limits, and process monitoring</p>
+                            <div class="tech-stack">
+                                <strong>Security:</strong> <span>AppArmor, Seccomp, Resource limits</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI Services -->
+            <div class="layer">
+                <div class="layer-header ai">
+                    <span>🤖 AI Services</span>
+                </div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component">
+                            <h4>Code Completion AI</h4>
+                            <p>Real-time code suggestions and auto-completion powered by language models</p>
+                            <div class="tech-stack">
+                                <strong>APIs:</strong> <span>OpenAI Codex, GitHub Copilot API, Anthropic Claude</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>Debugging Assistant</h4>
+                            <p>AI-powered error analysis, debugging suggestions, and code explanation</p>
+                            <div class="tech-stack">
+                                <strong>Features:</strong> <span>Error parsing, Stack trace analysis, Fix suggestions</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>Code Review AI</h4>
+                            <p>Automated code quality checks, best practices suggestions, and optimization tips</p>
+                            <div class="tech-stack">
+                                <strong>Analysis:</strong> <span>Code quality, Performance, Security vulnerabilities</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>AI Chat Interface</h4>
+                            <p>Conversational AI for coding help, explanations, and learning assistance</p>
+                            <div class="tech-stack">
+                                <strong>Integration:</strong> <span>OpenAI GPT-4, Claude, Custom prompts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Layer -->
+            <div class="layer">
+                <div class="layer-header data">
+                    <span>💾 Data & Storage Layer</span>
+                </div>
+                <div class="layer-content">
+                    <div class="components">
+                        <div class="component">
+                            <h4>User Database</h4>
+                            <p>User profiles, authentication data, project metadata, and collaboration info</p>
+                            <div class="tech-stack">
+                                <strong>Database:</strong> <span>PostgreSQL with Redis caching</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>File Storage</h4>
+                            <p>Code files, project assets, and user uploads with versioning support</p>
+                            <div class="tech-stack">
+                                <strong>Storage:</strong> <span>AWS S3, MinIO, or Google Cloud Storage</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>Session Management</h4>
+                            <p>Active coding sessions, execution history, and real-time collaboration state</p>
+                            <div class="tech-stack">
+                                <strong>Store:</strong> <span>Redis for sessions, MongoDB for logs</span>
+                            </div>
+                        </div>
+                        <div class="component">
+                            <h4>Analytics & Monitoring</h4>
+                            <p>Usage analytics, performance metrics, error tracking, and system monitoring</p>
+                            <div class="tech-stack">
+                                <strong>Tools:</strong> <span>Prometheus, Grafana, ELK Stack</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Flow -->
+            <div class="flow-diagram">
+                <h2 style="color: #2c3e50; margin-bottom: 30px;">Code Execution Flow</h2>
+                <div class="flow-step">User writes code</div>
+                <div class="flow-step">AI assists in real-time</div>
+                <div class="flow-step">Code sent to execution queue</div>
+                <div class="flow-step">Container spun up</div>
+                <div class="flow-step">Code executed safely</div>
+                <div class="flow-step">Results streamed back</div>
+                <div class="flow-step">AI analyzes output</div>
+            </div>
+            
+            <!-- Security Considerations -->
+            <div class="security-note">
+                <h3>🔐 Security & Performance Considerations</h3>
+                <ul class="security-list">
+                    <li>Container isolation with resource limits (CPU, memory, disk, network)</li>
+                    <li>Code execution timeouts and process monitoring</li>
+                    <li>Input sanitization and output filtering</li>
+                    <li>Rate limiting per user and API endpoints</li>
+                    <li>DDoS protection and request validation</li>
+                    <li>Encrypted data transmission (HTTPS/WSS)</li>
+                    <li>Regular security audits and dependency updates</li>
+                    <li>Horizontal scaling with load balancers</li>
+                    <li>CDN for static assets and global performance</li>
+                    <li>Database connection pooling and query optimization</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<!--Add AI IDE architecture page -->
